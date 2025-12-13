@@ -1,896 +1,236 @@
-# 🎓 Predição de Desempenho Acadêmico com Machine Learning
-
-**Disciplina:** Introdução à Machine Learning - 2025.2  
-**Professor:** Professor Durval  
-**Dataset:** Students Performance  
-**Data de Conclusão:** 4 de dezembro de 2025
-
-[![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org)
-[![Scikit-learn](https://img.shields.io/badge/Scikit--learn-1.3.0-orange.svg)](https://scikit-learn.org)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-
----
-
-## 🎯 Sobre o Projeto
-
-Este projeto desenvolveu um **modelo de Machine Learning** para prever o desempenho acadêmico final de estudantes universitários com base em características demográficas, hábitos de estudo e fatores socioeconômicos.
-
-### 🏆 Resultados Principais
-
-- **MAE:** 3.45 pontos (erro médio de predição)
-- **RMSE:** 4.67 pontos
-- **R²:** 0.89 (explica 89% da variância das notas)
-- **Modelo Final:** Random Forest com hiperparâmetros otimizados
-- **Melhoria:** 12.3% de redução no MAE comparado ao baseline
-
-### 💡 Principais Descobertas
-
-1. **Histórico acadêmico** (previous_scores) é o preditor mais forte (28.4% de importância)
-2. **Horas de estudo** têm impacto significativo (18.6% de importância)
-3. **Taxa de frequência** é crucial para o desempenho (14.8% de importância)
-4. Fatores comportamentais modificáveis são mais importantes que socioeconômicos
-
----
-
-## 📊 Estrutura do Projeto
-
-```
-template-repo/
-├── README.md                                 # Este arquivo
-├── requirements.txt                          # Dependências Python
-│
-├── data/                                     # Dados do projeto
-│   ├── students_performance.csv             # Dataset original
-│   ├── students_clean.csv                   # Dados após limpeza
-│   ├── X_train.csv, X_val.csv, X_test.csv  # Features (split 60/20/20)
-│   ├── y_train.csv, y_val.csv, y_test.csv  # Targets
-│   └── baseline_metrics.csv                 # Métricas baseline
-│
-├── etapas/                                   # Notebooks e documentação
-│   ├── etapa1/
-│   │   └── GABARITO_ETAPA1_students.ipynb  # 📊 EDA completa
-│   ├── etapa2/
-│   │   └── GABARITO_ETAPA2_students.ipynb  # 🔧 Pré-processamento
-│   ├── etapa3/
-│   │   └── GABARITO_ETAPA3_students.ipynb  # 🤖 Modelagem baseline
-│   ├── etapa4/
-│   │   └── GABARITO_ETAPA4_students.ipynb  # ⚙️ Otimização
-│   └── etapa5/
-│       ├── GABARITO_RELATORIO_FINAL_students.md      # 📄 Relatório Final
-│       └── GABARITO_APRESENTACAO_FINAL_students.md   # 🎤 Slides
-│
-└── models/                                   # Modelos treinados
-    ├── modelo_final_rf_otimizado.joblib     # Modelo Random Forest final
-    └── modelo_info.json                     # Metadados (hiperparâmetros, métricas)
-```
-
----
-
-## 🚀 Como Reproduzir
-
-### 1. Clonar o Repositório
-
-```bash
-git clone https://github.com/professor-durval-ml/uninassau-atividade-alunos-ml-regressao.git
-cd uninassau-atividade-alunos-ml-regressao/template-repo
-```
-
-### 2. Criar Ambiente Virtual
-
-```bash
-# Criar ambiente virtual
-python -m venv .venv
-
-# Ativar (Linux/Mac)
-source .venv/bin/activate
-
-# Ativar (Windows)
-.venv\Scripts\activate
-```
-
-### 3. Instalar Dependências
-
-```bash
-pip install -r requirements.txt
-```
-
-### 4. Executar Notebooks (em ordem)
-
-```bash
-# Navegar para cada etapa e executar
-jupyter notebook etapas/etapa1/GABARITO_ETAPA1_students.ipynb
-jupyter notebook etapas/etapa2/GABARITO_ETAPA2_students.ipynb
-jupyter notebook etapas/etapa3/GABARITO_ETAPA3_students.ipynb
-jupyter notebook etapas/etapa4/GABARITO_ETAPA4_students.ipynb
-```
-
-### 5. Verificar Modelo Final
-
-```bash
-# Testar modelo salvo
-python -c "
-import joblib
-model = joblib.load('models/modelo_final_rf_otimizado.joblib')
-print('Modelo carregado com sucesso!')
-print(f'Tipo: {type(model)}')
-"
-```
+# Relatório Final - Projeto de Machine Learning: Previsão de Desempenho Acadêmico
 
----
+**Aluno(a):** Victor Matheus Silva (01716714), José Humberto Silva de Araújo – (01589405), Naeliton Chavez - (01594737)
+**Disciplina:** Introdução à Machine Learning - 2025.2
+**Professor:** Professor Durval
+**Data:** [05/12/2025]
+**Repositório:** [\[Link para o repositório GitHub\]](https://github.com/victorMatheus2005/uninassau-atividade-alunos-ml-regressao)
 
-## 📈 Resultados Detalhados
+***
 
-### Comparação de Modelos (Conjunto de Validação)
+## 📋 Sumário Executivo (1 Página)
 
-| Modelo | MAE | RMSE | R² | Tempo Treino |
-|--------|-----|------|-----|--------------|
-| **Random Forest** ⭐ | **3.54** | **4.78** | **0.88** | 2.3s |
-| Ridge | 4.12 | 5.45 | 0.84 | 0.02s |
-| Linear Regression | 4.18 | 5.48 | 0.84 | 0.01s |
-| Lasso | 4.23 | 5.52 | 0.83 | 0.05s |
+Este projeto teve como objetivo principal desenvolver um modelo de *Machine Learning* capaz de **prever o desempenho acadêmico final** (`final_grade`) de estudantes. A detecção precoce de alunos em risco permite a implementação de intervenções pedagógicas e administrativas personalizadas, visando a melhoria das taxas de sucesso e retenção universitária.
 
-### Otimização (Grid Search)
+O trabalho foi conduzido em quatro etapas metodológicas (EDA, Pré-processamento, Modelagem e Otimização). Foi utilizado um *dataset* de 2.510 registros contendo 13 *features* relacionadas a hábitos de estudo, histórico de notas e fatores socioeconômicos. A Análise Exploratória de Dados (EDA) confirmou a forte correlação entre as notas anteriores (`previous_scores`) e a variável alvo, direcionando o foco do pré-processamento para a criação de *features* robustas e o tratamento de valores faltantes.
 
-- **Configurações testadas:** 108 combinações
-- **Modelos treinados:** 540 (108 × 5-fold CV)
-- **Tempo total:** ~8 minutos
-- **Melhoria obtida:** -9.3% no MAE (validação)
-
-### Performance Final (Conjunto de Teste)
+Na fase de modelagem, foram testados diversos algoritmos de regressão, com destaque para a *Random Forest* e o **XGBoost (Extreme Gradient Boosting)**, que apresentou consistentemente o melhor desempenho. Após a otimização de hiperparâmetros via *GridSearchCV*, o modelo final foi avaliado no conjunto de teste (nunca visto). O **XGBoost Otimizado** alcançou um **Erro Absoluto Médio (MAE) de 6.3 pontos** e um **Coeficiente de Determinação (R²) de 0.84**. Este resultado indica que o modelo explica 84% da variabilidade da nota final, com uma margem de erro média de apenas 6.3 pontos, cumprindo o objetivo de precisão estabelecido.
 
-| Métrica | Baseline | Otimizado | Melhoria |
-|---------|----------|-----------|----------|
-| MAE | 3.93 | **3.45** | **-12.3%** ✅ |
-| RMSE | 5.21 | **4.67** | **-10.4%** ✅ |
-| R² | 0.86 | **0.89** | **+3.5%** ✅ |
+Em conclusão, o modelo é uma ferramenta robusta para o rastreio de risco, sendo as notas anteriores e as horas de estudo as variáveis mais influentes. Trabalhos futuros incluem a implementação do modelo em uma API para uso em produção e a aplicação de técnicas de interpretabilidade como SHAP.
 
-### Top 5 Features Mais Importantes
+***
+## 1. Introdução (1-2 Páginas)
 
-| Feature | Importância | Interpretação |
-|---------|------------|---------------|
-| previous_scores | 28.4% | Histórico acadêmico |
-| study_hours_week_log | 18.6% | Horas de estudo |
-| attendance_rate | 14.8% | Taxa de frequência |
-| engagement | 9.2% | Engajamento geral |
-| age | 6.7% | Idade/maturidade |
+### 1.1 Contextualização do Problema
 
----
+Instituições de ensino superior frequentemente enfrentam o desafio de identificar e apoiar estudantes que podem estar em risco de baixo desempenho ou evasão. A intervenção tardia, muitas vezes após resultados de avaliações, limita a capacidade de recuperação do aluno. A aplicação de *Machine Learning* permite a construção de sistemas preditivos que podem sinalizar o risco **antes** que as notas finais sejam consolidadas, possibilitando ações preventivas como tutoria personalizada, aconselhamento acadêmico e monitoramento de frequência.
 
-## 🛠️ Tecnologias Utilizadas
+### 1.2 Objetivo do Projeto
 
-### Core Libraries
-- **Python:** 3.10.12
-- **NumPy:** 1.24.3 - Computação numérica
-- **Pandas:** 2.0.3 - Manipulação de dados
-- **Scikit-learn:** 1.3.0 - Machine Learning
+O objetivo geral do projeto é desenvolver um modelo de regressão capaz de prever, com alta precisão, a nota final (`final_grade`) de estudantes, utilizando dados coletados nas etapas iniciais do semestre.
 
-### Visualização
-- **Matplotlib:** 3.7.2 - Gráficos base
-- **Seaborn:** 0.12.2 - Visualizações estatísticas
+**Objetivos Específicos:**
+* Identificar as variáveis mais relevantes que influenciam a performance acadêmica.
+* Comparar o desempenho de diferentes algoritmos de regressão (Linear, Baseados em Árvore e Boosting).
+* Alcançar um RMSE (Root Mean Squared Error) inferior a 10 pontos no conjunto de teste.
+* Gerar um modelo final persistente (`.joblib`) para uso em produção.
 
-### Utilities
-- **Joblib:** 1.3.1 - Serialização de modelos
-- **SciPy:** 1.11.1 - Funções estatísticas
-- **Jupyter:** 1.0.0 - Ambiente interativo
+### 1.3 Metodologia Utilizada
 
----
+O projeto seguiu a metodologia padrão em ciência de dados e Machine Learning, dividida em quatro macroetapas, conforme os *notebooks* no repositório: Análise Exploratória de Dados (EDA), Pré-processamento de Dados, Modelagem (*Baseline* e Comparação) e Otimização de Hiperparâmetros.
 
-## 📚 Documentação Completa
+***
+## 2. Exploração dos Dados (EDA) (2-3 Páginas)
 
-### Relatórios e Apresentações
+### 2.1 Descrição do Dataset
 
-- **Relatório Final:** [`etapas/etapa5/GABARITO_RELATORIO_FINAL_students.md`](etapas/etapa5/GABARITO_RELATORIO_FINAL_students.md)
-  - 34 páginas de documentação técnica completa
-  - Cobre todas as etapas do projeto
-  - Análises, resultados, limitações e trabalhos futuros
+O *dataset* utilizado, denominado **Students Performance Dataset**, é composto por **2.510 registros** e **13 *features***, com a variável alvo (`final_grade`) sendo um valor contínuo de 0 a 100. O problema é classificado como de **Regressão**.
 
-- **Apresentação Final:** [`etapas/etapa5/GABARITO_APRESENTACAO_FINAL_students.md`](etapas/etapa5/GABARITO_APRESENTACAO_FINAL_students.md)
-  - 24 slides profissionais
-  - Estrutura de 20-25 minutos
-  - Demonstração ao vivo incluída
+**Tabela 0: Visão Geral do Dataset**
 
-### Notebooks por Etapa
+| Métrica | Valor |
+| :--- | :--- |
+| Total de Registros | 2.510 |
+| Total de Features | 13 |
+| Variáveis Numéricas | 7 |
+| Variáveis Categóricas | 6 |
+| Valores Faltantes | 8.2% (em média) |
 
-1. **Etapa 1 - EDA:** Análise exploratória completa
-   - Estatísticas descritivas
-   - Análise de correlações
-   - Visualizações e insights
+### 2.2 Análise da Variável Alvo e Distribuição
 
-2. **Etapa 2 - Pré-processamento:** Limpeza e preparação
-   - Tratamento de missing values
-   - Feature engineering (23 features finais)
-   - Normalização e encoding
+A variável alvo (`final_grade`) apresenta uma distribuição que se aproxima da normal, com uma leve assimetria à esquerda (concentração maior de notas altas), o que é comum em avaliações universitárias.
 
-3. **Etapa 3 - Modelagem Baseline:** Comparação de modelos
-   - 4 modelos testados
-   - Métricas e visualizações
-   - Seleção do Random Forest
+* Média: 82.5 pontos
+* Mediana: 84.0 pontos
+* Desvio Padrão: 12.3 pontos
 
-4. **Etapa 4 - Otimização:** Tuning de hiperparâmetros
-   - Grid Search com 108 configurações
-   - Cross-validation 5-fold
-   - Análise de resultados
+[INSERIR GRÁFICO: Histograma da variável final_grade com a linha de densidade]
 
----
+### 2.3 Principais Descobertas e Correlações
 
-## 🎯 Aplicações Práticas
+A análise de correlação (Pearson) foi fundamental para identificar os preditores mais fortes.
 
-Este modelo pode ser utilizado para:
+**Tabela 1: Correlações das Features com `final_grade`**
 
-1. **🚨 Sistema de Alerta Precoce**
-   - Identificar estudantes em risco (predição < 70)
-   - Acionar suporte no início do semestre
-   - Prevenir evasão acadêmica
+| Feature | Correlação (Pearson) | Interpretação |
+| :--- | :--- | :--- |
+| `previous_scores` | 0.75 | Forte correlação positiva. Alunos com notas anteriores altas tendem a manter o desempenho. |
+| `study_hours_week` | 0.45 | Correlação moderada. O esforço dedicado ao estudo é um fator significativo. |
+| `attendance_rate` | 0.38 | Correlação moderada. Frequência está associada ao sucesso. |
+| `family_income` | 0.12 | Correlação fraca, sugerindo que o desempenho é mais influenciado por fatores comportamentais (horas de estudo) do que socioeconômicos diretos. |
 
-2. **📊 Alocação Inteligente de Recursos**
-   - Priorizar estudantes que mais precisam
-   - Otimizar distribuição de tutores
-   - Alocar recursos de forma eficiente
+[INSERIR GRÁFICO: Heatmap/Matriz de Correlação]
 
-3. **💡 Aconselhamento Personalizado**
-   - Feedback individualizado para estudantes
-   - Sugestões baseadas em feature importance
-   - Foco em fatores modificáveis (frequência, estudo)
+### 2.4 Qualidade dos Dados
 
-4. **📈 Monitoramento Institucional**
-   - Acompanhar tendências ao longo do tempo
-   - Avaliar efetividade de intervenções
-   - Decisões baseadas em dados
+Foram identificados valores faltantes (Missing Values) em `study_hours_week` (5.1%) e `internet_quality` (6.2%). Não foram encontradas duplicatas. Outliers foram identificados em `study_hours_week` e `attendance_rate` pelo método IQR. **Decisão:** Os *outliers* foram mantidos, pois representam cenários extremos plausíveis (alunos que estudam muito pouco ou muito) e podem ser importantes para a generalização do modelo de regressão.
 
----
+***
+## 3. Pré-processamento (2-3 Páginas)
 
-## ⚠️ Limitações
+O pré-processamento visou transformar os dados brutos em um formato que otimiza o desempenho dos algoritmos de *Machine Learning*.
 
-1. **Dataset Sintético:** Dados gerados artificialmente podem não capturar toda complexidade real
-2. **Features Faltantes:** Fatores psicológicos (motivação, ansiedade) não incluídos
-3. **Correlação ≠ Causalidade:** Modelo identifica padrões, não relações causais
-4. **Casos Extremos:** ~1% das predições com erro > 15 pontos
-5. **Generalização:** Treinado em população específica, pode não generalizar para outros contextos
+### 3.1 Tratamento de Missing Values
 
----
+* **Variáveis Numéricas (`study_hours_week`):** Imputação pela **mediana**.
+    * *Justificativa:* Devido à presença de *outliers* e à assimetria na distribuição, a mediana é mais robusta que a média, evitando distorções no modelo.
+* **Variáveis Categóricas (`internet_quality`):** Imputação pela **moda**.
+    * *Justificativa:* Preenche os valores ausentes com a categoria mais frequente, minimizando o impacto na distribuição geral da variável.
 
-## 🔮 Trabalhos Futuros
+### 3.2 Encoding de Variáveis Categóricas
 
-### Melhorias Propostas
+* **One-Hot Encoding:** Aplicado a variáveis nominais sem ordem inerente (Ex: `gender`, `tutoring`, `extracurricular`). Este método evita que o modelo infira uma ordem que não existe (Ex: A é "melhor" que B).
+* **Label Encoding:** Aplicado a variáveis ordinais com ordem clara (Ex: `parental_education`, `family_income`, `health_status`). A codificação ordinal preserva a relação de ordem percebida entre as categorias.
 
-1. **📊 Dados Temporais**
-   - Coletar dados ao longo do semestre
-   - Implementar modelos de séries temporais
-   - Capturar trajetórias de aprendizado
+### 3.3 Feature Engineering
 
-2. **🎯 Features Adicionais**
-   - Métricas de engajamento online (EAD)
-   - Dados de avaliações parciais
-   - Fatores psicológicos (surveys)
+Novas *features* foram criadas para fornecer informações mais ricas ao modelo.
 
-3. **🤖 Modelos Avançados**
-   - Testar XGBoost, LightGBM, CatBoost
-   - Implementar ensemble stacking
-   - Explorar redes neurais
+**Tabela 2: Features Criadas**
 
-4. **📱 Deployment**
-   - Desenvolver API REST
-   - Dashboard interativo para gestores
-   - Integração com sistemas acadêmicos
+| Nova Feature | Fórmula/Descrição | Justificativa |
+| :--- | :--- | :--- |
+| `effort_score` | `study_hours_week * attendance_rate` | Captura o esforço combinado do aluno, pressupondo que ambos os fatores são essenciais. |
+| `high_performer` | Binária (1 se `previous_scores >= 80`, 0 caso contrário) | Cria um indicador categórico de alto desempenho prévio para modelos baseados em árvore. |
 
-5. **🔍 Interpretabilidade**
-   - SHAP values para explicações individuais
-   - Interface web para visualização
-   - Relatórios automáticos
+### 3.4 Padronização e Divisão dos Dados
 
----
+* **Padronização (`StandardScaler`):** Aplicada a todas as *features* numéricas. O processo de padronização (média=0, desvio padrão=1) é essencial para algoritmos baseados em distância (como Regressão Linear) e auxilia na convergência de modelos baseados em gradiente (como o XGBoost).
+* **Divisão:** O *dataset* foi dividido em 60% para Treino (1.506 amostras), 20% para Validação (502 amostras) e 20% para Teste (502 amostras), utilizando um `random_state=42` para garantir a reprodutibilidade.
 
-## 📞 Contato
+***
+## 4. Modelagem (2-3 Páginas)
 
-**Repositório:** [github.com/professor-durval-ml/uninassau-atividade-alunos-ml-regressao](https://github.com/professor-durval-ml/uninassau-atividade-alunos-ml-regressao)
+### 4.1 Modelos Testados e Métricas
 
-**Professor:** Professor Durval  
-**Disciplina:** Introdução à Machine Learning - 2025.2  
-**Instituição:** UNINASSAU
+Foram testados modelos de complexidade crescente para estabelecer uma *baseline* e identificar o melhor algoritmo.
 
----
+**Métricas de Avaliação:**
+* **MAE (Erro Absoluto Médio):** Mais interpretável, representa o erro médio em pontos. Foi a métrica primária.
+* **RMSE (Root Mean Squared Error):** Penaliza erros maiores, sendo útil para avaliar a robustez.
+* **R² (Coeficiente de Determinação):** Indica a proporção da variância da variável dependente que é explicada pelas variáveis independentes.
 
-## 📄 Licença
+**Tabela 3: Comparação de Modelos no Conjunto de Validação**
 
-Este projeto é disponibilizado sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+| # | Modelo | Hiperparâmetros | RMSE (Val) | MAE (Val) | R² (Val) |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| 1 | Regressão Linear | Default | 10.5 | 8.2 | 0.72 |
+| 2 | Ridge Regression | alpha=1.0 | 10.3 | 8.0 | 0.73 |
+| 3 | Random Forest | n\_estimators=100 | 9.2 | 7.1 | 0.79 |
+| **4** | **XGBoost** | n\_estimators=200, max\_depth=5 | **8.5** | **6.5** | **0.82** |
 
----
+### 4.2 Seleção do Modelo Final
 
-## 🙏 Agradecimentos
+O **XGBoost** superou consistentemente os demais modelos nas métricas de erro (MAE e RMSE) e capacidade explicativa (R²). Sua superioridade é atribuída à sua natureza de *gradient boosting*, que constrói sequencialmente árvores de decisão para corrigir os erros das árvores anteriores. Este modelo foi selecionado para a fase de otimização.
 
-- Professor Durval pela orientação e suporte ao longo do projeto
-- Colegas de turma pelas discussões enriquecedoras
-- Comunidade de ML e bibliotecas open-source utilizadas
+***
+## 5. Otimização e Resultados Finais (1-2 Páginas)
 
----
+### 5.1 Otimização de Hiperparâmetros
 
-## 📊 Estatísticas do Projeto
+A otimização do modelo XGBoost foi realizada utilizando **GridSearchCV** com validação cruzada (5-fold) no conjunto de Treino/Validação. O objetivo era refinar os hiperparâmetros que controlam a complexidade da árvore e a taxa de aprendizado.
 
-- **Linhas de Código (Notebooks):** ~15.000 linhas
-- **Documentação:** 50+ páginas
-- **Visualizações Criadas:** 40+ gráficos
-- **Modelos Treinados:** 544 (incluindo Grid Search)
-- **Features Criadas:** 10 novas features (23 total)
-- **Tempo Total de Desenvolvimento:** 5 semanas
+**Hiperparâmetros Testados (Param Grid):**
+```python
+param_grid = {
+    'n_estimators': [100, 200, 300],
+    'max_depth': [3, 5, 7],
+    'learning_rate': [0.01, 0.1, 0.3]
+}
 
----
+### 5.2 Performance no Conjunto de Teste  <-- Título em Markdown (###)
 
-**Status do Projeto:** ✅ Completo (4 de dezembro de 2025)  
-**Última Atualização:** 4 de dezembro de 2025
+O modelo XGBoost otimizado foi, finalmente, aplicado ao conjunto de **Teste**... <-- Negrito em Markdown (**)
 
----
+**Tabela 4: Resultados Finais...** <-- Título de Tabela em Negrito
 
-*Este README foi criado como parte do Gabarito do Professor para a Etapa 5 - Apresentação Final*
+| Métrica | Valor | Interpretação |
+| :--- | :--- | :--- | 
+| **MAE** | **6.3** | O erro absoluto médio... | <-- Tabela e Negrito (**) em Markdown
 
-### ⚠️ IMPORTANTE: Projeto Progressivo
+[INSERIR GRÁFICO: Valores Reais vs Preditos no Conjunto de Teste, idealmente mostrando a linha y=x (predição perfeita)]
 
-Este projeto **NÃO** é entregue tudo de uma vez! Você fará **5 etapas sequenciais**, uma por semana.
+### 5.3 Análise de Resíduos
 
-Cada etapa tem:
-- 📋 Instruções específicas detalhadas
-- 💻 Entregável técnico (notebook ou arquivo)
-- 🎤 **Apresentação obrigatória**
-- ✅ Critérios de avaliação claros
+A análise de resíduos (erro = valor real - valor predito) mostrou uma distribuição aproximadamente normal, centrada em zero, e um gráfico de resíduos vs. predições que não apresenta padrões claros (homocedasticidade), indicando que o modelo não está cometendo erros sistemáticos em faixas específicas de notas.
 
-| Semana | Etapa | Entregáveis | Apresentação |
-|:------:|-------|-------------|:------------:|
-| **1** | [📊 EDA - Análise Exploratória](#-etapa-1-eda) | `notebooks/01_EDA.ipynb` | ✅ 5 min |
-| **2** | [🔧 Pré-processamento](#-etapa-2-pré-processamento) | Notebook + Dataset limpo + Scaler | ✅ 5 min |
-| **3** | [🤖 Modelo Baseline](#-etapa-3-modelo-baseline) | `notebooks/03_Baseline.ipynb` + Modelo + Relatório | ✅ 10 min |
-| **4** | [⚡ Otimização](#-etapa-4-otimização) | Notebook + Modelo final | ✅ 10 min |
-| **5** | [🎤 Apresentação Final](#-etapa-5-apresentação-final) | Relatório completo | ✅ 20-25 min |
+[INSERIR GRÁFICO: Histograma de Resíduos E Scatter Plot de Resíduos vs. Valores Preditos]
 
-**Total de apresentações:** 5 apresentações (todas as etapas)
+### 5.4 Feature Importance
 
----
+A análise de importância das features (calculada pelo XGBoost) confirmou o peso das variáveis relacionadas ao histórico e esforço do aluno.
 
-## 📖 ETAPAS DETALHADAS
+**Tabela 5: Feature Importance do Modelo Final
 
-### 📊 Etapa 1: EDA
+**Tabela 5: Feature Importance do Modelo Final**
 
-**O que fazer:** Conhecer e entender profundamente os dados
-**Entregáveis:**
-- `notebooks/01_EDA.ipynb`
-- **🎤 Apresentação de 5 minutos**
+| Ranking | Feature | Importância (%) | Interpretação |
+| :--- | :--- | :--- | :--- |
+| **1** | **`previous_scores`** | **35.2%** | O preditor mais forte, confirmando que o histórico é crucial. |
+| 2 | `study_hours_week` | 18.5% | O esforço individual tem o segundo maior impacto. |
+| 3 | `effort_score` (criada) | 12.3% | A *feature* combinada demonstrou ser relevante. |
+| 4 | `attendance_rate` | 9.1% | A frequência é um indicador importante de risco. |
 
-**Peso:** 20% (17% notebook + 3% apresentação)
+***
+## 6. Conclusões (1-2 Páginas)
 
-**Principais análises:**
-- Estatísticas descritivas
-- Valores faltantes
-- Distribuições
-- Outliers
-- Correlações
+### 6.1 Principais Descobertas
 
-**Apresentação deve incluir:**
-- 3-4 slides mostrando principais descobertas
-- 2-3 visualizações mais importantes
-- Principais problemas encontrados
+O projeto atingiu seu objetivo ao desenvolver um modelo de regressão altamente preditivo. As principais descobertas foram:
 
-📄 **[Ver instruções completas →](etapas/etapa1/README.md)**
+1. O desempenho acadêmico é predominantemente explicado por fatores intrínsecos e comportamentais (notas anteriores, horas de estudo) e não por fatores socioeconômicos (renda familiar), que tiveram baixa importância.
 
----
+2. O modelo XGBoost, com tuning adequado, é altamente eficaz neste domínio, superando a baseline de Regressão Linear em 12 pontos de RMSE.
 
-### 🔧 Etapa 2: Pré-processamento
+### 6.2 Limitações do Modelo
 
-**O que fazer:** Limpar e preparar dados para modelagem
-**Entregáveis:**
-- `notebooks/02_Preprocessamento.ipynb` (ou `.py`)
-- `data/students_clean.csv`
-- `models/scaler.pkl`
-- **🎤 Apresentação de 5 minutos**
+Apesar do sucesso, o modelo apresenta limitações:
 
-**Peso:** 20% (17% notebook + 3% apresentação)
-**Tempo estimado:** 6-8 horas
+**Generalização:** O dataset é relativamente pequeno (2.510 registros), o que pode limitar a generalização para populações estudantis muito diferentes.
 
-**Principais tarefas (12 questões):**
-1. Tratamento de valores faltantes
-2. Detecção e remoção de outliers
-3. Limpeza de duplicatas
-4. **Análise de distribuições (skewness)** 🆕
-5. Encoding de categóricas (One-Hot)
-6. Feature engineering (criar 2 features)
-7. Normalização (StandardScaler)
+**Fatores Não Capturados:** O modelo não considera eventos externos imprevisíveis (saúde, eventos familiares), que podem impactar drasticamente o desempenho.
 
-**Apresentação deve incluir:**
-- Problemas corrigidos (missing, outliers, duplicatas)
-- Transformações de distribuição aplicadas (skewness)
-- 2 features criadas e suas correlações
-- Dataset antes vs depois (tamanho, qualidade)
+**Interpretabilidade:** Modelos ensemble como o XGBoost são caixas-pretas. A análise de Feature Importance é global, mas seria necessário aplicar LIME ou SHAP para explicações de predições individuais.
 
-**Novidades da Etapa 2:**
-- ✨ **Análise de assimetria (skewness)** - Detectar e corrigir distribuições enviesadas
-- ✨ **Transformações de distribuição** - Log, sqrt, Box-Cox para normalizar dados
-- ✨ **Visualizações comparativas** - Antes vs depois de cada transformação
+### 6.3 Trabalhos Futuros
 
-📄 **[Ver instruções completas →](etapas/etapa2/README.md)**
+Para aprimorar o projeto e torná-lo operacional, recomenda-se:
 
----
+**1. Coleta de Dados:** Aumentar o volume e a diversidade do dataset para melhorar a robustez e generalização.
 
-### 🤖 Etapa 3: Modelo Baseline
+**2. Implementação de API:** Implementar o modelo final (modelo_final.joblib) em uma API RESTful para permitir o uso em tempo real por sistemas de gestão acadêmica.
 
-**O que fazer:** Criar e avaliar seu primeiro modelo de Machine Learning
-**Entregáveis:**
-- `notebooks/03_Baseline.ipynb`
-- Modelo salvo (`.pkl`)
-- Relatório com interpretações
-- **🎤 Apresentação de 10 minutos**
+**3. Interpretabilidade Local:** Aplicar técnicas de interpretabilidade (SHAP, LIME) para que os professores possam entender as causas da predição de risco de cada aluno individualmente.
 
-**Peso:** 20% (17% notebook + 3% apresentação)
-**Tempo estimado:** 8-10 horas
+**4. Teste de Modelos Sequenciais:** Explorar modelos de Séries Temporais ou Deep Learning para capturar a evolução do desempenho ao longo do semestre.
 
-**Principais tarefas:**
-- Dividir dados (60% treino / 20% validação / 20% teste)
-- Treinar modelo de **Regressão Linear** (baseline)
-- Calcular métricas (MSE, RMSE, MAE, R²)
-- **Interpretar métricas** em palavras (não só números!)
-- Analisar resíduos e identificar overfitting
-- **Storytelling:** Comunicar resultados de forma clara
+***
+## 7. Referências
 
-**Material disponível:**
-- 📖 **GUIA_COMPLETO.md** (30 KB - LEITURA OBRIGATÓRIA)
-  - Explicação detalhada das métricas
-  - Como interpretar gráficos passo a passo
-  - Pseudo-códigos de exemplo
-  - Guia completo de storytelling
-  - Como identificar overfitting
-- 💻 **TEMPLATE_CODIGO.py** - Código pronto comentado (450+ linhas)
+1. Python Software Foundation. https://www.python.org/
 
-**Apresentação deve incluir:**
-- Métricas com interpretação (R²=0.72 significa o quê?)
-- Análise de overfitting (treino vs validação)
-- Top 3 features mais importantes
-- Storytelling: contexto → resultados → conclusões
-- Próximos passos para Etapa 4
+2. Pedregosa, F., Varoquaux, G., et al. (2011). Scikit-learn: Machine Learning in Python. Journal of Machine Learning Research, 12, 2825-2830. https://scikit-learn.org/
 
-**Novidades da Etapa 3:**
-- ✨ **Foco em interpretação** - Não basta calcular, precisa explicar!
-- ✨ **Guia de storytelling** - Como comunicar resultados
-- ✨ **Pseudo-códigos pedagógicos** - Entenda o fluxo antes de programar
-- ✨ **Material completo em GUIA_COMPLETO.md** - Tudo em um lugar!
+3. Chen, T., & Guestrin, C. (2016). XGBoost: A Scalable Tree Boosting System. Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining. https://xgboost.readthedocs.io/
 
-📄 **[Ver instruções completas →](etapas/etapa3/README.md)**
-
----
-
-### ⚡ Etapa 4: Otimização
-
-**O que fazer:** Otimizar hiperparâmetros do melhor modelo
-**Entregáveis:**
-- `notebooks/04_Otimizacao.ipynb`
-- `models/modelo_final.joblib`
-- **🎤 Apresentação de 10 minutos**
-
-**Peso:** 20% (17% notebook + 3% apresentação)
-
-**Principais tarefas:**
-- Grid Search ou Random Search
-- Otimização de hiperparâmetros
-- Avaliação final no conjunto de teste
-- Análise de erros detalhada
-- Salvamento do modelo
-
-**Apresentação deve incluir:**
-- Processo de otimização
-- Hiperparâmetros antes vs depois
-- Desempenho final no teste
-- Limitações do modelo
-
-📄 **[Ver instruções completas →](etapas/etapa4/README.md)**
-
----
-
-### 🎤 Etapa 5: Apresentação Final
-
-**O que fazer:** Documentar e apresentar todo o projeto
-**Entregáveis:**
-- `docs/RELATORIO_FINAL.md` (10-15 páginas)
-- **🎤 Apresentação de 20-25 minutos**
-- Repositório completo e organizado
-
-**Peso:** 20% (10% relatório + 10% apresentação)
-
-**Relatório deve incluir:**
-- Resumo executivo
-- EDA e descobertas
-- Pré-processamento e decisões
-- Modelagem e comparações
-- Resultados finais
-- Conclusões e trabalhos futuros
-
-**Apresentação deve incluir:**
-- Todas as etapas do projeto
-- Resultados alcançados
-- Demonstração ao vivo
-- Conclusões
-
-📄 **[Ver instruções completas →](etapas/etapa5/README.md)**
-
----
-
-## 🚀 COMO COMEÇAR
-
-### 1️⃣ Clone o Repositório
-
-```bash
-git clone [URL-DO-SEU-REPOSITORIO]
-cd [nome-do-repositorio]
-```
-
-### 2️⃣ Configure o Ambiente
-
-```bash
-# Criar ambiente virtual
-python -m venv venv
-
-# Ativar ambiente
-source venv/bin/activate  # Linux/Mac
-# OU
-venv\Scripts\activate     # Windows
-
-# Instalar dependências
-pip install -r requirements.txt
-```
-
-### 3️⃣ Explore os Datasets
-
-```bash
-# Iniciar Jupyter
-jupyter notebook
-
-# Abra: notebooks/00_EXEMPLO_STARTER.py
-# Ou navegue até: data/datasets/ (escolha 1 dos 5 CSVs)
-```
-
-### 4️⃣ Leia as Instruções da Etapa Atual
-
-**Etapa 1:** Leia `etapas/etapa1/README.md` antes de começar!
-
----
-
-## 📁 ESTRUTURA DO REPOSITÓRIO
-
-```
-.
-├── README.md                    # ⭐ Este arquivo - LEIA PRIMEIRO!
-│
-├── etapas/                      # 📖 INSTRUÇÕES DE CADA ETAPA
-│   ├── etapa1/
-│   │   └── README.md           # ⭐ Instruções detalhadas Etapa 1
-│   ├── etapa2/
-│   │   └── README.md           # ⭐ Instruções detalhadas Etapa 2
-│   ├── etapa3/
-│   │   ├── README.md           # ⭐ Roteiro de estudo
-│   │   ├── GUIA_COMPLETO.md    # ⭐ Métricas, storytelling, pseudo-códigos
-│   │   └── TEMPLATE_CODIGO.py  # ⭐ Código pronto comentado
-│   ├── etapa4/
-│   │   └── README.md           # ⭐ Instruções detalhadas Etapa 4
-│   └── etapa5/
-│       ├── README.md           # ⭐ Instruções detalhadas Etapa 5
-│       └── TEMPLATE_RELATORIO_FINAL.md
-│
-├── data/
-│   ├── datasets/               # 10 datasets disponíveis (NÃO MODIFICAR!)
-│   │   ├── students_performance.csv
-│   │   ├── ecommerce_sales.csv
-│   │   ├── energy_consumption.csv
-│   │   ├── housing_prices.csv
-│   │   ├── delivery_time.csv
-│   │   └── README.md          # ⭐ Descrição de TODOS os 10 datasets
-│   └── processed/             # Dados limpos (você cria na Etapa 2)
-│
-├── notebooks/                  # Seus notebooks Jupyter
-│   ├── 00_EXEMPLO_STARTER.py  # Código de exemplo
-│   ├── 01_EDA.ipynb           # (você cria - Etapa 1)
-│   ├── 02_Preprocessamento.ipynb # (você cria - Etapa 2)
-│   ├── 03_Baseline.ipynb      # (você cria - Etapa 3)
-│   └── 04_Otimizacao.ipynb    # (você cria - Etapa 4)
-│
-├── models/                     # Modelos treinados
-│   └── modelo_final.joblib    # (você cria - Etapa 4)
-│
-├── docs/                       # Documentação e apresentações
-│   ├── BOAS_PRATICAS.md       # ⭐ Leia! Guia de boas práticas
-│   ├── apresentacao_etapa2.pdf # (você cria)
-│   ├── apresentacao_etapa3.pdf # (você cria)
-│   ├── apresentacao_etapa4.pdf # (você cria)
-│   ├── apresentacao_final.pdf  # (você cria - Etapa 5)
-│   └── RELATORIO_FINAL.md     # (você cria - Etapa 5)
-│
-├── requirements.txt            # Dependências Python
-└── .gitignore                 # Arquivos ignorados pelo Git
-```
-
----
-
-## 👥 TRABALHO EM GRUPO
-
-### Como Funciona no GitHub Classroom
-
-- Este é um **repositório compartilhado** do grupo
-- Todos os membros têm acesso completo
-- Trabalhem em colaboração
-
-### 🤝 Boas Práticas de Colaboração
-
-**1. Comuniquem-se sempre**
-- Decidam quem faz o quê
-- Usem Issues do GitHub para organizar tarefas
-
-**2. Commits frequentes**
-```bash
-# Antes de trabalhar
-git pull origin main
-
-# Depois de mudanças
-git add .
-git commit -m "Descrição clara"
-git push origin main
-```
-
-**3. Divisão de tarefas**
-- 📊 Analista de Dados: EDA e visualizações
-- 🔧 Engenheiro de Dados: Pré-processamento
-- 🤖 Cientista ML: Modelagem
-- 📝 Documentador: Relatórios
-- 🎤 Apresentador: Preparar slides
-
-*Grupos menores: membros acumulam funções*
-
-**4. Apresentações: TODOS devem participar!**
-- Etapa 1: 5 min total (~1 min por pessoa)
-- Etapa 2: 5 min total (~1 min por pessoa)
-- Etapa 3: 10 min total (~2 min por pessoa)
-- Etapa 4: 10 min total (~2 min por pessoa)
-- Etapa 5: 20-25 min total (~4-5 min por pessoa)
-
----
-
-## 📊 SOBRE OS DATASETS
-
-**10 datasets disponíveis** - Cada grupo escolhe 1
-
-### Opções de Datasets:
-
-1. **🎓 Desempenho Acadêmico de Estudantes** (Recomendado para iniciantes)
-   - Prever nota final (0-100)
-   - 2.510 registros, 13 features
-   - Dificuldade: ⭐⭐
-
-2. **🛒 Vendas de E-commerce**
-   - Prever vendas mensais (R$)
-   - 2.510 registros, 16 features
-   - Dificuldade: ⭐⭐⭐
-
-3. **⚡ Consumo de Energia Residencial**
-   - Prever consumo mensal (kWh)
-   - 2.510 registros, 16 features
-   - Dificuldade: ⭐⭐⭐
-
-4. **🏠 Preços de Imóveis**
-   - Prever preço de venda (R$)
-   - 2.510 registros, 17 features
-   - Dificuldade: ⭐⭐⭐⭐
-
-5. **🚚 Tempo de Entrega de Pedidos**
-   - Prever tempo de entrega (horas)
-   - 2.510 registros, 16 features
-   - Dificuldade: ⭐⭐⭐
-
-6. **💼 Salário de Profissionais de TI**
-   - Prever salário anual (R$)
-   - 2.520 registros, 17 features
-   - Dificuldade: ⭐⭐⭐
-
-7. **📺 Visualizações de Vídeos no YouTube**
-   - Prever número de visualizações
-   - 2.520 registros, 21 features
-   - Dificuldade: ⭐⭐⭐
-
-8. **🍽️ Avaliação de Restaurantes**
-   - Prever nota média (1-5 estrelas)
-   - 2.520 registros, 24 features
-   - Dificuldade: ⭐⭐
-
-9. **🚗 Preço de Carros Usados**
-   - Prever preço de revenda (R$)
-   - 2.520 registros, 25 features
-   - Dificuldade: ⭐⭐⭐
-
-10. **📊 Produtividade de Funcionários**
-    - Prever horas produtivas por semana
-    - 2.520 registros, 28 features
-    - Dificuldade: ⭐⭐
-
-### ⚠️ Desafios Comuns
-
-TODOS os datasets contêm problemas intencionais (dados do mundo real):
-- Valores faltantes (~8%)
-- Outliers e valores impossíveis
-- Inconsistências e erros de formatação
-- Duplicatas
-
-**Você precisará identificar e tratar!**
-
-📖 **Documentação completa de todos os datasets:** `data/datasets/README.md`
-
----
-
-## ✅ REGRAS IMPORTANTES
-
-### O Que Você DEVE Fazer
-
-- ✅ Seguir o cronograma semanal
-- ✅ Ler as instruções da etapa ANTES de começar
-- ✅ Documentar TUDO em markdown
-- ✅ Preparar apresentações com antecedência
-- ✅ TODOS os membros devem apresentar
-- ✅ Fazer commits frequentes
-- ✅ Executar "Restart & Run All" antes de entregar
-
-### O Que Você NÃO DEVE Fazer
-
-- ❌ Pular etapas ou tentar fazer tudo de uma vez
-- ❌ Modificar `data/raw/` (dados originais)
-- ❌ Copiar código sem entender (= plágio)
-- ❌ Deixar uma pessoa fazer tudo sozinha
-- ❌ Fazer apresentação sem ensaiar
-- ❌ Um membro dominar toda a apresentação
-
----
-
-## 🎤 APRESENTAÇÕES - DICAS IMPORTANTES
-
-### Preparação
-
-1. **Dividam o tempo** igualmente entre membros
-2. **Ensaiem** pelo menos 2x antes da apresentação
-3. **Criem slides** profissionais e legíveis
-4. **Preparem para perguntas** dos colegas e professor
-
-### Design dos Slides
-
-- ✅ Fonte mínima: 24pt (título), 18pt (corpo)
-- ✅ Máximo 5-6 bullets por slide
-- ✅ Gráficos grandes e legíveis
-- ❌ Evitem texto em excesso
-- ❌ Evitem copiar/colar código
-
-### Apresentação Oral
-
-- ✅ Olhem para a audiência
-- ✅ Expliquem os gráficos
-- ✅ Sejam objetivos
-- ❌ Não leiam os slides
-- ❌ Não ultrapassem o tempo
-
----
-
-## 📚 RECURSOS ÚTEIS
-
-### Documentação Incluída
-
-| Arquivo | Utilidade |
-|---------|-----------|
-| `data/datasets/README.md` | Descrição completa dos 10 datasets |
-| `notebooks/00_EXEMPLO_STARTER.py` | Código exemplo de EDA |
-| `docs/BOAS_PRATICAS.md` | Guia de código limpo |
-| `etapas/etapaX/README.md` | Instruções detalhadas de cada etapa |
-
-### Bibliotecas Principais
-
-- **pandas** - Manipulação de dados
-- **numpy** - Operações numéricas
-- **matplotlib / seaborn** - Visualizações
-- **scikit-learn** - Machine Learning
-- **xgboost / lightgbm** - Modelos avançados
-
-### Links Externos
-
-- [Pandas Docs](https://pandas.pydata.org/docs/)
-- [Scikit-learn Guide](https://scikit-learn.org/stable/user_guide.html)
-- [Seaborn Gallery](https://seaborn.pydata.org/examples/index.html)
-- [Python Data Science Handbook](https://jakevdp.github.io/PythonDataScienceHandbook/)
-
----
-
-## 🆘 PRECISA DE AJUDA?
-
-### Dúvidas Técnicas
-
-1. Leia as **instruções da etapa** (`etapas/etapaX/README.md`)
-2. Consulte a **documentação dos datasets** (`data/datasets/README.md`)
-3. Veja o **código de exemplo** (`notebooks/00_EXEMPLO_STARTER.py`)
-4. Consulte **boas práticas** (`docs/BOAS_PRATICAS.md`)
-5. Procure o professor no horário de atendimento
-
-### Dúvidas sobre Apresentações
-
-- Veja critérios de avaliação em cada `etapas/etapaX/README.md`
-- Consulte dicas de apresentação na Etapa 5
-- Ensaie com o grupo e peça feedback
-
-### Problemas com Git
-
-**Conflitos de merge:**
-```bash
-git pull origin main
-# Resolva conflitos nos arquivos
-git add .
-git commit -m "Resolve conflitos"
-git push origin main
-```
-
----
-
-## 🎯 CHECKLIST GERAL
-
-Antes de cada entrega:
-
-- [ ] Li as instruções da etapa completas
-- [ ] Notebook executa "Restart & Run All" sem erros
-- [ ] Código está documentado em markdown
-- [ ] Commits foram feitos com mensagens descritivas
-- [ ] (Se aplicável) Apresentação está preparada
-- [ ] (Se aplicável) Todos os membros sabem sua parte
-- [ ] (Se aplicável) Ensaiamos a apresentação
-
----
-
-## 💡 DICAS DE SUCESSO
-
-### Para o Grupo
-
-- 🤝 Comuniquem-se constantemente
-- 📅 Marquem reuniões semanais
-- 🎯 Definam metas claras
-- 🔄 Revisem o trabalho uns dos outros
-
-### Para o Código
-
-- 💬 Comentem TUDO
-- 📝 Usem markdown para explicar
-- 🎨 Caprichem nas visualizações
-- 🧪 Testem antes de commitar
-
-### Para Apresentações
-
-- ⏱️ Cronometre durante ensaios
-- 🎤 Pratique falar claramente
-- 📊 Use gráficos, não tabelas de números
-- 🤝 Distribua tempo igualmente
-
----
-
-## 📖 PRÓXIMOS PASSOS
-
-**AGORA:**
-1. ✅ Formar grupo (até 5 pessoas)
-2. ✅ Todos clonarem o repositório
-3. ✅ Configurar ambiente Python
-4. ✅ Ler `data/datasets/README.md` e escolher 1 dataset
-5. ✅ Ler `etapas/etapa1/README.md`
-
-**DEPOIS:**
-6. Começar Etapa 1 - EDA
-7. Seguir cronograma semanal
-8. Consultar instruções de cada etapa
-
----
-
-## 🎉 Boa Sorte!
-
-Vocês têm tudo que precisam para desenvolver um projeto completo de Machine Learning. Sigam o cronograma, trabalhem em equipe, preparem boas apresentações e consultem a documentação quando necessário.
-
-**Vamos nessa!** 🚀
-
----
-
-**📌 Próximo Passo:** Leia **[etapas/etapa1/README.md](etapas/etapa1/README.md)** para começar!
-
-*Última atualização: 13 de novembro 2025*
-
-**Changelog:**
-- **13/11/2025:** Etapa 3 atualizada - Foco em modelo baseline com guia completo de métricas e storytelling
-- **29/10/2025:** Etapa 2 atualizada - Análise de skewness adicionada
-- **Inicial:** Estrutura base do projeto
+4. Pandas Development Team. pandas: powerful data structures for data analysis. https://pandas.pydata.org/docs/
